@@ -13,7 +13,7 @@ def set_units(unit_system):
     """This function takes care of the units in the boltzmann and planck constant """
 
     constants = {"SI": ((6.62606957 * pow(10, -34))/(2*numpy.pi), 1.3806488 * pow(10, -23)), \
-    "LJ": ((1.0)/(2*numpy.pi), 1.0), \
+    "LJ": ((0.18292026)/(2*numpy.pi), 1.0), \
     "METAL": ((1.3807 * pow(10, -16))/(2*numpy.pi), 8.6173 * pow(10, -5)), \
     "CGS": ((6.6261 * pow(10, -27))/(2*numpy.pi), 1.3807 * pow(10, -16)), \
     "REAL": ((39.9021909505 * pow(10, -3))/(2*numpy.pi), 8.3142670736 * pow(10, -7)), \
