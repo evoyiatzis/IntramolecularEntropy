@@ -117,7 +117,7 @@ def intermediate_file(input_file, num_atoms, atom_coord):
         atom_coord[iat, 2] = float(temp[2])
         iat += 1
 
-    if iat == (num_atoms-1):
+    if iat == num_atoms:
         return False
 
     return True
