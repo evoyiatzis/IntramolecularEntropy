@@ -138,13 +138,13 @@ def intramolecular_entropy():
 
     os.remove(dump_file)
 
-   with open("ReferenceConfiguration.txt", "w") as ref_state_file:
+   with open("ReferenceConfiguration.txt", "wb") as ref_state_file:
             for imol in range(0, num_molecules):
                 np.savetxt(ref_state_file, np.c_[np.array(atoms_in_mol[imol]), \
                 ref_atom[np.array(atoms_in_mol[imol]), 0], ref_atom[np.array(atoms_in_mol[imol]), 1], ref_atom[np.array(atoms_in_mol[imol]), 2]])
 
   else:
-        with open("ReferenceConfiguration.txt", "r") as ref_state_file:
+        with open("ReferenceConfiguration.txt", "rb") as ref_state_file:
             atom_id, ref_atom[:, 0], ref_atom[:, 1], ref_atom[:, 2] = \
                    np.loadtxt(ref_state_file, dtype='float, float, float, float', unpack=True)
             atom_id = atom_id.astype(int)
@@ -212,7 +212,7 @@ def intramolecular_entropy():
                                                    - np.log(1 - np.exp(-beta*omega*reduced_planck))
             output_file.write("The total intramolecular entropy is {} \n".format(sum(mode_entropy)))
             for ival, jval in zip(eigval[sort_eigenvalues[6: ]], mode_entropy):
-              output_file.write("{} {} /n".format(ival,jval))
+              output_file.write("{} {} \n".format(ival,jval))
 
 if __name__ == "__main__":
     intramolecular_entropy()
