@@ -136,7 +136,7 @@ def intramolecular_entropy():
 
       np.savetxt(unfolded_file, np.c_[atom_coord[:, 0], atom_coord[:, 1], atom_coord[:, 2]], fmt='%.10e')
 
-    os.remove(dump_file)
+    #os.remove(dump_file)
 
    with open("ReferenceConfiguration.txt", "wb") as ref_state_file:
             for imol in range(0, num_molecules):
