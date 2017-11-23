@@ -199,7 +199,7 @@ def intramolecular_entropy():
             nat = dispersity[imol]
             displacement_matrix = form_disp_matrix(atom_coord[atoms_in_mol[imol], :], sq_mass[atoms_in_mol[imol]])
             disp_matrix[imol][0:3*nat][0:3*nat] += \
-             (displacement_matrix - disp_matrix[imol][0:3*nat][0:3*nat])/ float(iconf)
+             (displacement_matrix[0:3*nat][0:3*nat] - disp_matrix[imol][0:3*nat][0:3*nat])/ float(iconf)
 
  os.remove("IntermediateDumpFile.txt.gz")
 
