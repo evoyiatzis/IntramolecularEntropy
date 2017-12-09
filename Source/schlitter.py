@@ -42,21 +42,23 @@ def intramolecular_entropy():
  beta = 1 / (boltzmann_constant*args.Temperature)
 
  # open the data file to read the molecules
+ sorted_bond_sequence = []
  with open(args.InputDataFile, "r") as data_file:
         num_atoms, num_bonds, num_atom_types, xboxlength, yboxlength, zboxlength = read_preliminary_data(data_file)
 
-        atom_coord = np.zeros((num_atoms, 3))
         atom_type = np.zeros(num_atoms, dtype=int)
         dispersity, molecule_id = [0] * num_atoms, [0] * num_atoms
         atom_mass = np.zeros(num_atoms)
-        ref_atom = np.zeros((num_atoms, 3))
-        mean_atom_pos = np.zeros((num_atoms, 3))
-        sorted_bond_sequence = []
-    
+            
         read_atomic_info(data_file, num_atoms, molecule_id, atom_type, dispersity)
         read_atomic_masses(data_file, atom_mass, atom_type, num_atom_types)
         
         read_bonds(data_file, num_bonds, sorted_bond_sequence)
+        
+ atom_coord = np.zeros((num_atoms, 3))
+ sq_mass = np.sqrt(atom_mass)
+ ref_atom = np.zeros((num_atoms, 3))
+ mean_atom_pos = np.zeros((num_atoms, 3))
 
  np_mol_id = np.array(molecule_id, dtype=int)
 
@@ -67,8 +69,6 @@ def intramolecular_entropy():
  # find the maximum number of atoms that one molecule contains
  max_atoms_per_mol = max(dispersity)
  disp_matrix = np.zeros(shape=(num_molecules, 3*max_atoms_per_mol, 3*max_atoms_per_mol))
-
- sq_mass = np.sqrt(atom_mass)
 
  atoms_in_mol = []
  for imol in range(0, num_molecules):
