@@ -48,13 +48,14 @@ def intramolecular_entropy():
         atom_coord = np.zeros((num_atoms, 3))
         atom_type = np.zeros(num_atoms, dtype=int)
         dispersity, molecule_id = [0] * num_atoms, [0] * num_atoms
-        table_mass, atom_mass = np.zeros(num_atom_types), np.zeros(num_atoms)
+        atom_mass = np.zeros(num_atoms)
         ref_atom = np.zeros((num_atoms, 3))
         mean_atom_pos = np.zeros((num_atoms, 3))
         sorted_bond_sequence = []
-
-        read_atomic_masses(data_file, table_mass, num_atom_types)
+    
         read_atomic_info(data_file, num_atoms, molecule_id, atom_type, dispersity)
+        read_atomic_masses(data_file, atom_mass, atom_type, num_atom_types)
+        
         read_bonds(data_file, num_bonds, sorted_bond_sequence)
 
  np_mol_id = np.array(molecule_id, dtype=int)
@@ -66,9 +67,6 @@ def intramolecular_entropy():
  # find the maximum number of atoms that one molecule contains
  max_atoms_per_mol = max(dispersity)
  disp_matrix = np.zeros(shape=(num_molecules, 3*max_atoms_per_mol, 3*max_atoms_per_mol))
-
- for itype in range(0, num_atom_types):
-    atom_mass[atom_type == itype] = table_mass[itype]
 
  sq_mass = np.sqrt(atom_mass)
 
