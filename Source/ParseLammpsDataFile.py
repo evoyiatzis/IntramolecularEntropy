@@ -36,8 +36,11 @@ def read_preliminary_data(input_file):
 
     return num_atoms, num_bonds, num_atom_types, xboxlength, yboxlength, zboxlength
 
-def read_atomic_masses(input_file, table_mass, number_atom_types):
+def read_atomic_masses(input_file, atom_mass, atom_type, number_atom_types):
     """ find the masses of all atom types in the system"""
+    
+    table_mass = numpy.zeros(num_atom_types)
+    
     while True:
         line = input_file.readline()
         temp = line.split()
@@ -52,6 +55,11 @@ def read_atomic_masses(input_file, table_mass, number_atom_types):
                             line = input_file.readline()
                             temp = line.split()
                             table_mass[int(temp[0])-1] = float(temp[1])
+                            
+                        # assign the mass to each atom here    
+                        for itype in range(0, num_atom_types):
+                            atom_mass[atom_type == itype] = table_mass[itype]
+                            
                         # rewind the LAMMPS data file
                         input_file.seek(0)
                         return
