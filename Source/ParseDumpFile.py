@@ -133,4 +133,8 @@ def read_configuration(string, input_file, num_atoms, atom_coord):
         'intermediate': intermediate_file,
     }
 
-    return dict_func[string](input_file, num_atoms, atom_coord)
+    if string in dict_func:
+        return dict_func[string](input_file, num_atoms, atom_coord)
+    else:
+        sys.exit('This type of dump file does not exist !')
+
