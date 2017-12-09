@@ -64,7 +64,7 @@ def read_atomic_masses(input_file, atom_mass, atom_type, number_atom_types):
                         input_file.seek(0)
                         return
 
-def read_atomic_info(input_file, num_atoms, molecule_id, atom_type, dispersity):
+def read_atomic_info(input_file, num_atoms, molecule_id, atom_type):
     """It extracts the molecule id and atom type of the input structure """
     while True:
         line = input_file.readline()
@@ -79,7 +79,7 @@ def read_atomic_info(input_file, num_atoms, molecule_id, atom_type, dispersity):
                         imol = int(temp[1]) - 1
                         molecule_id[iat] = imol
                         atom_type[iat] = int(temp[2]) - 1
-                        dispersity[imol] += 1
+                        
                         for _ in range(1, num_atoms):
                             line = input_file.readline()
                             temp = line.split()
@@ -87,7 +87,7 @@ def read_atomic_info(input_file, num_atoms, molecule_id, atom_type, dispersity):
                             imol = int(temp[1]) - 1
                             molecule_id[iat] = imol
                             atom_type[iat] = int(temp[2]) - 1
-                            dispersity[imol] += 1
+                            
                         # rewind the LAMMPS data file
                         input_file.seek(0)
                         return
