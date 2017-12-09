@@ -32,6 +32,7 @@ def intramolecular_entropy():
  
  if args.yasp is True:
         args.units = "YASP"
+        args.DumpFileType = "xyz"
 
  if args.units is None:
         reduced_planck, boltzmann_constant = set_units("REAL")
