@@ -12,7 +12,7 @@ import argparse
 import numpy as np
 from utilities import set_units, kabsch, form_disp_matrix
 from ParseLammpsDataFile import read_preliminary_data, read_atomic_masses, read_atomic_info, read_bonds
-from ParseLammpsDumpFile import read_configuration
+from ParseDumpFile import read_configuration
 
 def intramolecular_entropy():
  """This function is coordinating the calculation of the intramolecular entropy """
