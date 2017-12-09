@@ -47,10 +47,10 @@ def intramolecular_entropy():
         num_atoms, num_bonds, num_atom_types, xboxlength, yboxlength, zboxlength = read_preliminary_data(data_file)
 
         atom_type = np.zeros(num_atoms, dtype=int)
-        dispersity, molecule_id = [0] * num_atoms, [0] * num_atoms
+        molecule_id = [0] * num_atoms
         atom_mass = np.zeros(num_atoms)
             
-        read_atomic_info(data_file, num_atoms, molecule_id, atom_type, dispersity)
+        read_atomic_info(data_file, num_atoms, molecule_id, atom_type)
         read_atomic_masses(data_file, atom_mass, atom_type, num_atom_types)
         
         read_bonds(data_file, num_bonds, sorted_bond_sequence)
@@ -63,7 +63,9 @@ def intramolecular_entropy():
  np_mol_id = np.array(molecule_id, dtype=int)
 
  num_molecules = max(molecule_id) + 1
- dispersity = dispersity[:num_molecules]
+ dispersity = [0] * num_molecules
+ for imol in range(0, num_molecules):
+     dispersity[imol] = numpy.count_nonzero(atom_type == itype)
  molecule_mass, min_rg = np.zeros(num_molecules), np.zeros(num_molecules)
 
  # find the maximum number of atoms that one molecule contains
