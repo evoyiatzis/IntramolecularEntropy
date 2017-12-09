@@ -19,7 +19,8 @@ def set_units(unit_system):
     "REAL": ((39.9021909505 * pow(10, -3))/(2*numpy.pi), 8.3142670736 * pow(10, -7)), \
     "NANO": (6.62606957 * pow(10, -4)/(2*numpy.pi), 1.3806488 * pow(10, -2)), \
     "MICRO": ((6.62606957 * pow(10, -13))/(2*numpy.pi), 1.3806488 * pow(10, -8)), \
-    "ELECTRON": (0.142534616294 /(2*numpy.pi), 2.96993934136 * pow(10, -6))}
+    "ELECTRON": (0.142534616294 /(2*numpy.pi), 2.96993934136 * pow(10, -6)), \
+    "YASP": (1.0 /(2*numpy.pi), 1.0 )} # I must include the proper values for the two constants
 
     if unit_system in constants:
         return constants[unit_system]
