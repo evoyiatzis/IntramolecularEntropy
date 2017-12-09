@@ -21,13 +21,17 @@ def intramolecular_entropy():
 
  parser.add_argument("Temperature", type=float, help="The temperature of the system in Kelvin")
  parser.add_argument("OutputEntropyFile", help="The name of the output file where the eigenvalues of the covariance matrix will be stored as well as their contribution to the intramolecular entropy. The name should include the full path to the file. The file is assumed to be new.")
- parser.add_argument("LAMMPSInputDataFile", help="The name of the lammps input data file. The atom_style is assumed to be \"full\" otherwise the information about molecules cannot be retrieved from the data file.")
+ parser.add_argument("InputDataFile", help="The name of the lammps input data file. The atom_style is assumed to be \"full\" otherwise the information about molecules cannot be retrieved from the data file.")
  parser.add_argument("DumpFileType", help="Define the type of the dump file. It can be either \"xyz\" which means that the file is an xyz one, 'scaled' which means the coordinates are scaled and the dump is the usual lammps file or 'typical' which is a regular LAMMPS dump file with the format \"id x y z\".")
- parser.add_argument("LAMMPSInputDumpFile", nargs='+', help="A list with the name of the lammps input trajectory files. They should include a full path.")
+ parser.add_argument("InputDumpFile", nargs='+', help="A list with the name of the lammps input trajectory files. They should include a full path.")
  parser.add_argument("--units", help="define the units to be used in the analysis. The available unit systems are SI, CGS, METAL, LJ, MICRO, NANO, REAL and ELECTRON. It should be written in capital letters. If the specified unit systems is not implemented then the analysis will be stopped immediately and an error message will be printed in the screen. The default unit system is REAL.")
  parser.add_argument("--restart", help="If specified it means that the analysis will restart after the unfolding.")
+ parser.add_argument("--yasp", help="If specified it means that the input files have been created by YASP code")
 
  args = parser.parse_args()
+ 
+ if args.yasp is True:
+        args.units = "YASP"
 
  if args.units is None:
         reduced_planck, boltzmann_constant = set_units("REAL")
@@ -36,9 +40,9 @@ def intramolecular_entropy():
 
  beta = 1 / (boltzmann_constant*args.Temperature)
 
- # open the LAMMPS data file to read the molecules
- with open(args.LAMMPSInputDataFile, "r") as lammps_data_file:
-        num_atoms, num_bonds, num_atom_types, xboxlength, yboxlength, zboxlength = read_preliminary_data(lammps_data_file)
+ # open the data file to read the molecules
+ with open(args.InputDataFile, "r") as data_file:
+        num_atoms, num_bonds, num_atom_types, xboxlength, yboxlength, zboxlength = read_preliminary_data(data_file)
 
         atom_coord = np.zeros((num_atoms, 3))
         atom_type = np.zeros(num_atoms, dtype=int)
@@ -48,9 +52,9 @@ def intramolecular_entropy():
         mean_atom_pos = np.zeros((num_atoms, 3))
         sorted_bond_sequence = []
 
-        read_atomic_masses(lammps_data_file, table_mass, num_atom_types)
-        read_atomic_info(lammps_data_file, num_atoms, molecule_id, atom_type, dispersity)
-        read_bonds(lammps_data_file, num_bonds, sorted_bond_sequence)
+        read_atomic_masses(data_file, table_mass, num_atom_types)
+        read_atomic_info(data_file, num_atoms, molecule_id, atom_type, dispersity)
+        read_bonds(data_file, num_bonds, sorted_bond_sequence)
 
  np_mol_id = np.array(molecule_id, dtype=int)
 
@@ -96,7 +100,7 @@ def intramolecular_entropy():
   num_confs = 0
   if args.restart is None:
 
-   for dump_file in args.LAMMPSInputDumpFile:
+   for dump_file in args.InputDumpFile:
 
     with gzip.open(dump_file, "rb") as cur_dump_file:
 
