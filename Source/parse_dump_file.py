@@ -3,7 +3,7 @@
 """This file contains the functions
 to read from the dump files
 """
-import sys
+from sys import exit
 from itertools import islice
 
 def dump_file(input_file, num_atoms, atom_coord):
@@ -136,4 +136,4 @@ def read_configuration(string, input_file, num_atoms, atom_coord):
     if string in dict_func:
         return dict_func[string](input_file, num_atoms, atom_coord)
     else:
-        sys.exit('This type of dump file does not exist !')
+        exit('This type of dump file does not exist !')
