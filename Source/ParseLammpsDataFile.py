@@ -38,9 +38,9 @@ def read_preliminary_data(input_file):
 
 def read_atomic_masses(input_file, atom_mass, atom_type, number_atom_types):
     """ find the masses of all atom types in the system"""
-    
-    table_mass = numpy.zeros(num_atom_types)
-    
+
+    table_mass = numpy.zeros(number_atom_types)
+
     while True:
         line = input_file.readline()
         temp = line.split()
@@ -55,14 +55,14 @@ def read_atomic_masses(input_file, atom_mass, atom_type, number_atom_types):
                             line = input_file.readline()
                             temp = line.split()
                             table_mass[int(temp[0])-1] = float(temp[1])
-                            
-                        # assign the mass to each atom here    
-                        for itype in range(0, num_atom_types):
+
+                        # assign the mass to each atom here
+                        for itype in range(0, number_atom_types):
                             atom_mass[atom_type == itype] = table_mass[itype]
-                            
+
                         # rewind the LAMMPS data file
                         input_file.seek(0)
-                        return
+                        return  
 
 def read_atomic_info(input_file, num_atoms, molecule_id, atom_type):
     """It extracts the molecule id and atom type of the input structure """
@@ -79,7 +79,7 @@ def read_atomic_info(input_file, num_atoms, molecule_id, atom_type):
                         imol = int(temp[1]) - 1
                         molecule_id[iat] = imol
                         atom_type[iat] = int(temp[2]) - 1
-                        
+
                         for _ in range(1, num_atoms):
                             line = input_file.readline()
                             temp = line.split()
@@ -87,7 +87,7 @@ def read_atomic_info(input_file, num_atoms, molecule_id, atom_type):
                             imol = int(temp[1]) - 1
                             molecule_id[iat] = imol
                             atom_type[iat] = int(temp[2]) - 1
-                            
+
                         # rewind the LAMMPS data file
                         input_file.seek(0)
                         return
