@@ -9,6 +9,6 @@ The maintainer of the code is Evangelos Voyiatzis, who can be emailed at e.voyia
 
 The distribution includes the following files and directory:
 
-README			this file
+README.md			this file
 LICENSE			the GNU open-source license
 Source      directory with the source code 
