@@ -11,7 +11,7 @@ import gzip
 import argparse
 import numpy as np
 from utilities import set_units, kabsch, form_disp_matrix
-from ParseLammpsDataFile import read_preliminary_data, read_atomic_masses, read_atomic_info, read_bonds
+from parse_data_file import read_preliminary_data, read_atomic_masses, read_atomic_info, read_bonds
 from parse_dump_file import read_configuration
 
 def intramolecular_entropy():
