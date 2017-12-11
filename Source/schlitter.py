@@ -48,10 +48,10 @@ def intramolecular_entropy():
         num_atoms, num_bonds, num_atom_types, xboxlength, yboxlength, zboxlength = read_preliminary_data(data_file)
 
         atom_type = np.zeros(num_atoms, dtype=int)
-        molecule_id = [0] * num_atoms
+        np_mol_id = np.zeros(num_atoms, dtype=int)
         atom_mass = np.zeros(num_atoms)
 
-        read_atomic_info(data_file, num_atoms, molecule_id, atom_type)
+        read_atomic_info(data_file, num_atoms, np_mol_id, atom_type)
         read_atomic_masses(data_file, atom_mass, atom_type, num_atom_types)
 
         read_bonds(data_file, num_bonds, sorted_bond_sequence)
@@ -60,8 +60,6 @@ def intramolecular_entropy():
  sq_mass = np.sqrt(atom_mass)
  ref_atom = np.zeros((num_atoms, 3))
  mean_atom_pos = np.zeros((num_atoms, 3))
-
- np_mol_id = np.array(molecule_id, dtype=int)
 
  num_molecules = np.amax(np_mol_id) + 1
  dispersity = [0] * num_molecules
