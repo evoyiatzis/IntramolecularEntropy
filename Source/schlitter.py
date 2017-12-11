@@ -81,8 +81,7 @@ def intramolecular_entropy():
  unfold_left, unfold_right = [], []
  for imol in range(0, num_molecules):
   exclude, current = [], []
-  k = molecule_id.index(imol)
-  current.append(k) # the starting atom is appended to the current list
+  current.append(atoms_in_mol[imol][0]) # the starting atom is appended to the current list
 
   while len(exclude) < dispersity[imol]:
    new_list = []
