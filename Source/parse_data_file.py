@@ -9,7 +9,7 @@ It contains the functions:
 -read_bonds
 """
 
-import numpy
+from numpy import zeros, amax, concatenate
 
 def read_preliminary_data(input_file):
     """ find how many atoms & atom types are contained in the system"""
@@ -39,7 +39,7 @@ def read_preliminary_data(input_file):
 def read_atomic_masses(input_file, atom_mass, atom_type, number_atom_types):
     """ find the masses of all atom types in the system"""
 
-    table_mass = numpy.zeros(number_atom_types)
+    table_mass = zeros(number_atom_types)
 
     while True:
         line = input_file.readline()
@@ -94,7 +94,7 @@ def read_atomic_info(input_file, num_atoms, molecule_id, atom_type):
 
 def read_bonds(input_file, num_bonds, sorted_bonds):
     """ store the atom-molecule and atom type info in two lists"""
-    left_bonds, right_bonds = numpy.zeros(num_bonds, dtype=int), numpy.zeros(num_bonds, dtype=int)
+    left_bonds, right_bonds = zeros(num_bonds, dtype=int), zeros(num_bonds, dtype=int)
 
     while True:
         line = input_file.readline()
@@ -114,9 +114,9 @@ def read_bonds(input_file, num_bonds, sorted_bonds):
                             indx = int(temp[0]) - 1
                             left_bonds[indx] = int(temp[2]) - 1
                             right_bonds[indx] = int(temp[3]) - 1
-                        num_atoms = max(numpy.amax(left_bonds), numpy.amax(right_bonds)) + 1
+                        num_atoms = max(amax(left_bonds), amax(right_bonds)) + 1
                         for iat in range(0, num_atoms):
-                            sorted_bonds.append(numpy.concatenate((left_bonds[right_bonds == iat], \
+                            sorted_bonds.append(concatenate((left_bonds[right_bonds == iat], \
                                              right_bonds[left_bonds == iat])))
                         input_file.seek(0) # rewind the LAMMPS data file
                         return
