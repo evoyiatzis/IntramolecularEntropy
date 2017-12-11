@@ -66,7 +66,7 @@ def intramolecular_entropy():
  num_molecules = max(molecule_id) + 1
  dispersity = [0] * num_molecules
  for imol in range(0, num_molecules):
-     dispersity[imol] = np.count_nonzero(molecule_id == imol)
+     dispersity[imol] = np.count_nonzero(np_mol_id == imol)
  molecule_mass, min_rg = np.zeros(num_molecules), np.zeros(num_molecules)
 
  # find the maximum number of atoms that one molecule contains
