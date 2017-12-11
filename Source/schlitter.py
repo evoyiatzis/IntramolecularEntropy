@@ -5,10 +5,10 @@ the intramolecular entropy based on
 Schlitter's method
 """
 
-import os
-import sys
-import gzip
-import argparse
+from os import remove
+from sys import exit
+from gzip import open
+from argparse import ArgumentParser
 import numpy as np
 from utilities import set_units, kabsch, form_disp_matrix
 from parse_data_file import read_preliminary_data, read_atomic_masses, read_atomic_info, read_bonds
@@ -17,7 +17,7 @@ from parse_dump_file import read_configuration
 def intramolecular_entropy():
  """This function is coordinating the calculation of the intramolecular entropy """
 
- parser = argparse.ArgumentParser(description='A python script to compute the Intramolecular Entropy based on the Schlitter\'s method. Entropies are computed in Boltzmann\'s constant units, i.e. they are normalized by k_B. The system is assumed to be periodic in all three directions.')
+ parser = ArgumentParser(description='A python script to compute the Intramolecular Entropy based on the Schlitter\'s method. Entropies are computed in Boltzmann\'s constant units, i.e. they are normalized by k_B. The system is assumed to be periodic in all three directions.')
 
  parser.add_argument("Temperature", type=float, help="The temperature of the system in Kelvin")
  parser.add_argument("OutputEntropyFile", help="The name of the output file where the eigenvalues of the covariance matrix will be stored as well as their contribution to the intramolecular entropy. The name should include the full path to the file. The file is assumed to be new.")
@@ -95,13 +95,13 @@ def intramolecular_entropy():
    # move the contents of the new list to the current list
    current = new_list
 
- with gzip.open("UnfoldedDumpFile.txt.gz", "ab+") as unfolded_file:
+ with open("UnfoldedDumpFile.txt.gz", "ab+") as unfolded_file:
   num_confs = 0
   if args.restart is None:
 
    for dump_file in args.InputDumpFile:
 
-    with gzip.open(dump_file, "rb") as cur_dump_file:
+    with open(dump_file, "rb") as cur_dump_file:
 
      while True: # perform the calculations by analyzing all available configurations
 
@@ -139,10 +139,10 @@ def intramolecular_entropy():
 
       np.savetxt(unfolded_file, np.c_[atom_coord[:, 0], atom_coord[:, 1], atom_coord[:, 2]], fmt='%.10e')
 
-    #os.remove(dump_file)
+    #remove(dump_file)
 
    if num_confs < (3*max_atoms_per_mol + 1):
-        sys.exit('The number of configurations is smaller than the maximum number of atoms in the system')
+        exit('The number of configurations is smaller than the maximum number of atoms in the system')
     
     
    with open("ReferenceConfiguration.txt", "wb") as ref_state_file:
@@ -160,8 +160,8 @@ def intramolecular_entropy():
             ref_atom[:, 2] = ref_atom[atom_id, 2]
 
 
- with gzip.open("IntermediateDumpFile.txt.gz", "wb+") as intermediate_file:
-  with gzip.open("UnfoldedDumpFile.txt.gz", "rb+") as unfolded_file:
+ with open("IntermediateDumpFile.txt.gz", "wb+") as intermediate_file:
+  with open("UnfoldedDumpFile.txt.gz", "rb+") as unfolded_file:
 
    iconf = 0
    while True:
@@ -182,9 +182,9 @@ def intramolecular_entropy():
         mean_atom_pos[:, 1] += (atom_coord[:, 1] - mean_atom_pos[:, 1]) / float(iconf)
         mean_atom_pos[:, 2] += (atom_coord[:, 2] - mean_atom_pos[:, 2]) / float(iconf)
 
- os.remove("UnfoldedDumpFile.txt.gz") # delete the intermediate file with the unfolded coordinates
+ remove("UnfoldedDumpFile.txt.gz") # delete the intermediate file with the unfolded coordinates
 
- with gzip.open("IntermediateDumpFile.txt.gz", "rb+") as intermediate_file:
+ with open("IntermediateDumpFile.txt.gz", "rb+") as intermediate_file:
 
   iconf = 0
   while True:
@@ -206,7 +206,7 @@ def intramolecular_entropy():
             disp_matrix[imol][0:3*nat][0:3*nat] += \
              (displacement_matrix - disp_matrix[imol][0:3*nat][0:3*nat])/ float(iconf)
 
- os.remove("IntermediateDumpFile.txt.gz")
+ remove("IntermediateDumpFile.txt.gz")
 
  with open(args.OutputEntropyFile, "w") as output_file:
         for imol in range(0, num_molecules):
