@@ -155,7 +155,8 @@ def intramolecular_entropy():
             ref_atom[:, 1] = ref_atom[atom_id, 1]
             ref_atom[:, 2] = ref_atom[atom_id, 2]
 
- if num_confs < (3*max_atoms_per_mol + 1):
+ if args.restart is None:
+    if num_confs < (3*max_atoms_per_mol + 1):
         sys.exit('The number of configurations is smaller than the maximum number of atoms in the system')
 
  with gzip.open("IntermediateDumpFile.txt.gz", "wb+") as intermediate_file:
