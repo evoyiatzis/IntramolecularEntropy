@@ -6,7 +6,7 @@
 - form_displacement_matrix
 """
 
-import sys
+from sys import exit
 import numpy
 
 def set_units(unit_system):
@@ -25,7 +25,7 @@ def set_units(unit_system):
     if unit_system in constants:
         return constants[unit_system]
     else:
-        sys.exit('This unit system does not exist !')
+        exit('This unit system does not exist !')
 
 def kabsch(atomic_coord, ref):
     """It applies the kabsch algorithm to determine the rotated coordinates of a molecule """
