@@ -11,4 +11,4 @@ The distribution includes the following files and directory:
 
 README			this file
 LICENSE			the GNU open-source license
-src			    directory with the source code 
+Source      directory with the source code 
