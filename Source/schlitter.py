@@ -63,7 +63,7 @@ def intramolecular_entropy():
 
  np_mol_id = np.array(molecule_id, dtype=int)
 
- num_molecules = max(molecule_id) + 1
+ num_molecules = np.amax(np_mol_id) + 1
  dispersity = [0] * num_molecules
  for imol in range(0, num_molecules):
      dispersity[imol] = np.count_nonzero(np_mol_id == imol)
