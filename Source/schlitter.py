@@ -141,6 +141,10 @@ def intramolecular_entropy():
 
     #os.remove(dump_file)
 
+   if num_confs < (3*max_atoms_per_mol + 1):
+        sys.exit('The number of configurations is smaller than the maximum number of atoms in the system')
+    
+    
    with open("ReferenceConfiguration.txt", "wb") as ref_state_file:
             for imol in range(0, num_molecules):
                 np.savetxt(ref_state_file, np.c_[np.array(atoms_in_mol[imol]), \
@@ -155,9 +159,6 @@ def intramolecular_entropy():
             ref_atom[:, 1] = ref_atom[atom_id, 1]
             ref_atom[:, 2] = ref_atom[atom_id, 2]
 
- if args.restart is None:
-    if num_confs < (3*max_atoms_per_mol + 1):
-        sys.exit('The number of configurations is smaller than the maximum number of atoms in the system')
 
  with gzip.open("IntermediateDumpFile.txt.gz", "wb+") as intermediate_file:
   with gzip.open("UnfoldedDumpFile.txt.gz", "rb+") as unfolded_file:
