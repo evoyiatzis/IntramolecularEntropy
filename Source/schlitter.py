@@ -30,7 +30,7 @@ def intramolecular_entropy():
  parser.add_argument("--yasp", help="If specified it means that the input files have been created by YASP code")
 
  args = parser.parse_args()
- 
+
  if args.yasp is True:
         args.units = "YASP"
         args.DumpFileType = "xyz"
@@ -50,12 +50,12 @@ def intramolecular_entropy():
         atom_type = np.zeros(num_atoms, dtype=int)
         molecule_id = [0] * num_atoms
         atom_mass = np.zeros(num_atoms)
-            
+
         read_atomic_info(data_file, num_atoms, molecule_id, atom_type)
         read_atomic_masses(data_file, atom_mass, atom_type, num_atom_types)
-        
+
         read_bonds(data_file, num_bonds, sorted_bond_sequence)
-        
+
  atom_coord = np.zeros((num_atoms, 3))
  sq_mass = np.sqrt(atom_mass)
  ref_atom = np.zeros((num_atoms, 3))
@@ -218,7 +218,7 @@ def intramolecular_entropy():
                                                    - np.log(1 - np.exp(-beta*omega*reduced_planck))
             output_file.write("The total intramolecular entropy is {} \n".format(sum(mode_entropy)))
             for ival, jval in zip(eigval[sort_eigenvalues[6: ]], mode_entropy):
-              output_file.write("{} {} \n".format(ival,jval))
+              output_file.write("{} {} \n".format(ival, jval))
 
 if __name__ == "__main__":
     intramolecular_entropy()
