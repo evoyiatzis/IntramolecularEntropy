@@ -1,4 +1,5 @@
 This is a python code to compute the intramolecular entropy of a molecule using the Schlitter quasi-harmonic approach.
+It is a serial code which makes use of NumPy for most of the numerical calculations. The python version is 3.6. The input files have the same format as those obtained from LAMMPS software.
 
 ----------------------------------------------------------------------
 
