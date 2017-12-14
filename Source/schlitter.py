@@ -9,7 +9,7 @@ from os import remove
 from sys import exit
 from gzip import open
 from argparse import ArgumentParser
-import numpy as np
+from numpy import zeros, sqrt, amax, count_nonzero, where, sum, multiply, savetxt, c_, array, loadtxt, linalg, exp, log
 from utilities import set_units, kabsch, form_disp_matrix
 from parse_data_file import read_preliminary_data, read_atomic_masses, read_atomic_info, read_bonds
 from parse_dump_file import read_configuration
@@ -47,34 +47,34 @@ def intramolecular_entropy():
  with open(args.InputDataFile, "r") as data_file:
         num_atoms, num_bonds, num_atom_types, xboxlength, yboxlength, zboxlength = read_preliminary_data(data_file)
 
-        atom_type = np.zeros(num_atoms, dtype=int)
-        molecule_id = np.zeros(num_atoms, dtype=int)
-        atom_mass = np.zeros(num_atoms)
+        atom_type = zeros(num_atoms, dtype=int)
+        molecule_id = zeros(num_atoms, dtype=int)
+        atom_mass = zeros(num_atoms)
 
         read_atomic_info(data_file, num_atoms, molecule_id, atom_type)
         read_atomic_masses(data_file, atom_mass, atom_type, num_atom_types)
 
         read_bonds(data_file, num_bonds, sorted_bond_sequence)
 
- atom_coord = np.zeros((num_atoms, 3))
- sq_mass = np.sqrt(atom_mass)
- ref_atom = np.zeros((num_atoms, 3))
- mean_atom_pos = np.zeros((num_atoms, 3))
+ atom_coord = zeros((num_atoms, 3))
+ sq_mass = sqrt(atom_mass)
+ ref_atom = zeros((num_atoms, 3))
+ mean_atom_pos = zeros((num_atoms, 3))
 
- num_molecules = np.amax(molecule_id) + 1
+ num_molecules = amax(molecule_id) + 1
  dispersity = [0] * num_molecules
  for imol in range(0, num_molecules):
-     dispersity[imol] = np.count_nonzero(molecule_id == imol)
- molecule_mass, min_rg = np.zeros(num_molecules), np.zeros(num_molecules)
+     dispersity[imol] = count_nonzero(molecule_id == imol)
+ molecule_mass, min_rg = zeros(num_molecules), zeros(num_molecules)
 
  # find the maximum number of atoms that one molecule contains
  max_atoms_per_mol = max(dispersity)
- disp_matrix = np.zeros(shape=(num_molecules, 3*max_atoms_per_mol, 3*max_atoms_per_mol))
+ disp_matrix = zeros(shape=(num_molecules, 3*max_atoms_per_mol, 3*max_atoms_per_mol))
 
  atoms_in_mol = []
  for imol in range(0, num_molecules):
-  atoms_in_mol.append(np.where(molecule_id == imol)[0])
-  molecule_mass[imol] = np.sum(atom_mass[molecule_id == imol])
+  atoms_in_mol.append(where(molecule_id == imol)[0])
+  molecule_mass[imol] = sum(atom_mass[molecule_id == imol])
 
  unfold_left, unfold_right = [], []
  for imol in range(0, num_molecules):
@@ -103,10 +103,8 @@ def intramolecular_entropy():
 
     with open(dump_file, "rb") as cur_dump_file:
 
-     while True: # perform the calculations by analyzing all available configurations
-
-      if read_configuration(args.DumpFileType, cur_dump_file, num_atoms, atom_coord):
-        break
+    # perform the calculations by analyzing all available configurations
+     while not read_configuration(args.DumpFileType, cur_dump_file, num_atoms, atom_coord):
 
       num_confs += 1
       print("The current timestep is {}".format(num_confs))
@@ -117,43 +115,43 @@ def intramolecular_entropy():
        atom_coord[jat, 2] -= zboxlength*round((atom_coord[jat, 2] - atom_coord[iat, 2])/zboxlength)
 
       for imol in range(0, num_molecules):
-       com_x = np.sum(np.multiply(atom_mass[atoms_in_mol[imol]], \
+       com_x = sum(multiply(atom_mass[atoms_in_mol[imol]], \
                atom_coord[atoms_in_mol[imol], 0])) / molecule_mass[imol]
-       com_y = np.sum(np.multiply(atom_mass[atoms_in_mol[imol]], \
+       com_y = sum(multiply(atom_mass[atoms_in_mol[imol]], \
                atom_coord[atoms_in_mol[imol], 1])) / molecule_mass[imol]
-       com_z = np.sum(np.multiply(atom_mass[atoms_in_mol[imol]], \
+       com_z = sum(multiply(atom_mass[atoms_in_mol[imol]], \
                atom_coord[atoms_in_mol[imol], 2])) / molecule_mass[imol]
 
        atom_coord[atoms_in_mol[imol], 0] -= com_x
        atom_coord[atoms_in_mol[imol], 1] -= com_y
        atom_coord[atoms_in_mol[imol], 2] -= com_z
 
-       square_rg = np.sum(atom_mass[atoms_in_mol[imol]]*(atom_coord[atoms_in_mol[imol], 0]**2 + \
+       square_rg = sum(atom_mass[atoms_in_mol[imol]]*(atom_coord[atoms_in_mol[imol], 0]**2 + \
         atom_coord[atoms_in_mol[imol], 1]**2 + atom_coord[atoms_in_mol[imol], 2]**2)) / molecule_mass[imol]
 
-       if num_confs == 1 or np.sqrt(square_rg) < min_rg[imol]:
+       if num_confs == 1 or sqrt(square_rg) < min_rg[imol]:
                         ref_atom[atoms_in_mol[imol], 0] = atom_coord[atoms_in_mol[imol], 0].copy()
                         ref_atom[atoms_in_mol[imol], 1] = atom_coord[atoms_in_mol[imol], 1].copy()
                         ref_atom[atoms_in_mol[imol], 2] = atom_coord[atoms_in_mol[imol], 2].copy()
-                        min_rg[imol] = np.sqrt(square_rg)
+                        min_rg[imol] = sqrt(square_rg)
 
-      np.savetxt(unfolded_file, np.c_[atom_coord[:, 0], atom_coord[:, 1], atom_coord[:, 2]], fmt='%.10e')
+      savetxt(unfolded_file, c_[atom_coord[:, 0], atom_coord[:, 1], atom_coord[:, 2]], fmt='%.10e')
 
     #remove(dump_file)
 
    if num_confs < (3*max_atoms_per_mol + 1):
         exit('The number of configurations is smaller than the maximum number of atoms in the system')
-    
-    
+
+
    with open("ReferenceConfiguration.txt", "wb") as ref_state_file:
             for imol in range(0, num_molecules):
-                np.savetxt(ref_state_file, np.c_[np.array(atoms_in_mol[imol]), \
-                ref_atom[np.array(atoms_in_mol[imol]), 0], ref_atom[np.array(atoms_in_mol[imol]), 1], ref_atom[np.array(atoms_in_mol[imol]), 2]])
+                savetxt(ref_state_file, c_[array(atoms_in_mol[imol]), \
+                ref_atom[array(atoms_in_mol[imol]), 0], ref_atom[array(atoms_in_mol[imol]), 1], ref_atom[array(atoms_in_mol[imol]), 2]])
 
   else:
         with open("ReferenceConfiguration.txt", "rb") as ref_state_file:
             atom_id, ref_atom[:, 0], ref_atom[:, 1], ref_atom[:, 2] = \
-                   np.loadtxt(ref_state_file, dtype='float, float, float, float', unpack=True)
+                   loadtxt(ref_state_file, dtype='float, float, float, float', unpack=True)
             atom_id = atom_id.astype(int)
             ref_atom[:, 0] = ref_atom[atom_id, 0]
             ref_atom[:, 1] = ref_atom[atom_id, 1]
@@ -164,10 +162,7 @@ def intramolecular_entropy():
   with open("UnfoldedDumpFile.txt.gz", "rb+") as unfolded_file:
 
    iconf = 0
-   while True:
-
-        if read_configuration('intermediate', unfolded_file, num_atoms, atom_coord):
-            break
+   while not read_configuration('intermediate', unfolded_file, num_atoms, atom_coord):
 
         print("step {}".format(iconf))
         iconf += 1
@@ -175,8 +170,8 @@ def intramolecular_entropy():
             atom_coord[atoms_in_mol[imol], :] = \
                         kabsch(atom_coord[atoms_in_mol[imol], :], ref_atom[atoms_in_mol[imol], :])
 
-        np.savetxt(intermediate_file, \
-                         np.c_[atom_coord[:, 0], atom_coord[:, 1], atom_coord[:, 2]], fmt='%.10e')
+        savetxt(intermediate_file, \
+                         c_[atom_coord[:, 0], atom_coord[:, 1], atom_coord[:, 2]], fmt='%.10e')
 
         mean_atom_pos[:, 0] += (atom_coord[:, 0] - mean_atom_pos[:, 0]) / float(iconf)
         mean_atom_pos[:, 1] += (atom_coord[:, 1] - mean_atom_pos[:, 1]) / float(iconf)
@@ -187,10 +182,7 @@ def intramolecular_entropy():
  with open("IntermediateDumpFile.txt.gz", "rb+") as intermediate_file:
 
   iconf = 0
-  while True:
-
-        if read_configuration('intermediate', intermediate_file, num_atoms, atom_coord):
-            break
+  while not read_configuration('intermediate', intermediate_file, num_atoms, atom_coord):
 
         print("The current timestep is {}".format(iconf))
 
@@ -210,11 +202,11 @@ def intramolecular_entropy():
 
  with open(args.OutputEntropyFile, "w") as output_file:
         for imol in range(0, num_molecules):
-            eigval = np.linalg.eigvalsh(disp_matrix[imol][0:3*dispersity[imol]][0:3*dispersity[imol]])
+            eigval = linalg.eigvalsh(disp_matrix[imol][0:3*dispersity[imol]][0:3*dispersity[imol]])
             sort_eigenvalues = eigval.argsort()
-            omega = 1 / np.sqrt(eigval[sort_eigenvalues[6: ]]*beta)
-            mode_entropy = (beta*omega*reduced_planck)/(np.exp(beta*omega*reduced_planck)-1) \
-                                                   - np.log(1 - np.exp(-beta*omega*reduced_planck))
+            omega = 1 / sqrt(eigval[sort_eigenvalues[6: ]]*beta)
+            mode_entropy = (beta*omega*reduced_planck)/(exp(beta*omega*reduced_planck)-1) \
+                                                   - log(1 - exp(-beta*omega*reduced_planck))
             output_file.write("The total intramolecular entropy is {} \n".format(sum(mode_entropy)))
             for ival, jval in zip(eigval[sort_eigenvalues[6: ]], mode_entropy):
               output_file.write("{} {} \n".format(ival, jval))
