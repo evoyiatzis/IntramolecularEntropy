@@ -62,7 +62,7 @@ def read_atomic_masses(input_file, atom_mass, atom_type, number_atom_types):
 
                         # rewind the LAMMPS data file
                         input_file.seek(0)
-                        return  
+                        return
 
 def read_atomic_info(input_file, num_atoms, molecule_id, atom_type):
     """It extracts the molecule id and atom type of the input structure """
