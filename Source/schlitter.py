@@ -7,9 +7,9 @@ Schlitter's method
 
 from os import remove
 from sys import exit
-from gzip import open
+from gzip import open as Open
 from argparse import ArgumentParser
-from numpy import zeros, sqrt, amax, count_nonzero, where, sum, multiply, savetxt, c_, array, loadtxt, linalg, exp, log
+from numpy import zeros, sqrt, amax, count_nonzero, where, multiply, savetxt, c_, array, loadtxt, linalg, exp, log, sum as Sum
 from utilities import set_units, kabsch, form_disp_matrix
 from parse_data_file import read_preliminary_data, read_atomic_masses, read_atomic_info, read_bonds
 from parse_dump_file import read_configuration
@@ -42,9 +42,9 @@ def intramolecular_entropy():
 
  beta = 1 / (boltzmann_constant*args.Temperature)
 
- # open the data file to read the molecules
+ # Open the data file to read the molecules
  sorted_bond_sequence = []
- with open(args.InputDataFile, "r") as data_file:
+ with Open(args.InputDataFile, "r") as data_file:
         num_atoms, num_bonds, num_atom_types, xboxlength, yboxlength, zboxlength = read_preliminary_data(data_file)
 
         atom_type = zeros(num_atoms, dtype=int)
@@ -74,7 +74,7 @@ def intramolecular_entropy():
  atoms_in_mol = []
  for imol in range(0, num_molecules):
   atoms_in_mol.append(where(molecule_id == imol)[0])
-  molecule_mass[imol] = sum(atom_mass[molecule_id == imol])
+  molecule_mass[imol] = Sum(atom_mass[molecule_id == imol])
 
  unfold_left, unfold_right = [], []
  for imol in range(0, num_molecules):
@@ -95,13 +95,13 @@ def intramolecular_entropy():
    # move the contents of the new list to the current list
    current = new_list
 
- with open("UnfoldedDumpFile.txt.gz", "ab+") as unfolded_file:
+ with Open("UnfoldedDumpFile.txt.gz", "ab+") as unfolded_file:
   num_confs = 0
   if args.restart is None:
 
    for dump_file in args.InputDumpFile:
 
-    with open(dump_file, "rb") as cur_dump_file:
+    with Open(dump_file, "rb") as cur_dump_file:
 
     # perform the calculations by analyzing all available configurations
      while not read_configuration(args.DumpFileType, cur_dump_file, num_atoms, atom_coord):
@@ -115,18 +115,18 @@ def intramolecular_entropy():
        atom_coord[jat, 2] -= zboxlength*round((atom_coord[jat, 2] - atom_coord[iat, 2])/zboxlength)
 
       for imol in range(0, num_molecules):
-       com_x = sum(multiply(atom_mass[atoms_in_mol[imol]], \
+       com_x = Sum(multiply(atom_mass[atoms_in_mol[imol]], \
                atom_coord[atoms_in_mol[imol], 0])) / molecule_mass[imol]
-       com_y = sum(multiply(atom_mass[atoms_in_mol[imol]], \
+       com_y = Sum(multiply(atom_mass[atoms_in_mol[imol]], \
                atom_coord[atoms_in_mol[imol], 1])) / molecule_mass[imol]
-       com_z = sum(multiply(atom_mass[atoms_in_mol[imol]], \
+       com_z = Sum(multiply(atom_mass[atoms_in_mol[imol]], \
                atom_coord[atoms_in_mol[imol], 2])) / molecule_mass[imol]
 
        atom_coord[atoms_in_mol[imol], 0] -= com_x
        atom_coord[atoms_in_mol[imol], 1] -= com_y
        atom_coord[atoms_in_mol[imol], 2] -= com_z
 
-       square_rg = sum(atom_mass[atoms_in_mol[imol]]*(atom_coord[atoms_in_mol[imol], 0]**2 + \
+       square_rg = Sum(atom_mass[atoms_in_mol[imol]]*(atom_coord[atoms_in_mol[imol], 0]**2 + \
         atom_coord[atoms_in_mol[imol], 1]**2 + atom_coord[atoms_in_mol[imol], 2]**2)) / molecule_mass[imol]
 
        if num_confs == 1 or sqrt(square_rg) < min_rg[imol]:
@@ -143,13 +143,13 @@ def intramolecular_entropy():
         exit('The number of configurations is smaller than the maximum number of atoms in the system')
 
 
-   with open("ReferenceConfiguration.txt", "wb") as ref_state_file:
+   with Open("ReferenceConfiguration.txt", "wb") as ref_state_file:
             for imol in range(0, num_molecules):
                 savetxt(ref_state_file, c_[array(atoms_in_mol[imol]), \
                 ref_atom[array(atoms_in_mol[imol]), 0], ref_atom[array(atoms_in_mol[imol]), 1], ref_atom[array(atoms_in_mol[imol]), 2]])
 
   else:
-        with open("ReferenceConfiguration.txt", "rb") as ref_state_file:
+        with Open("ReferenceConfiguration.txt", "rb") as ref_state_file:
             atom_id, ref_atom[:, 0], ref_atom[:, 1], ref_atom[:, 2] = \
                    loadtxt(ref_state_file, dtype='float, float, float, float', unpack=True)
             atom_id = atom_id.astype(int)
@@ -158,8 +158,8 @@ def intramolecular_entropy():
             ref_atom[:, 2] = ref_atom[atom_id, 2]
 
 
- with open("IntermediateDumpFile.txt.gz", "wb+") as intermediate_file:
-  with open("UnfoldedDumpFile.txt.gz", "rb+") as unfolded_file:
+ with Open("IntermediateDumpFile.txt.gz", "wb+") as intermediate_file:
+  with Open("UnfoldedDumpFile.txt.gz", "rb+") as unfolded_file:
 
    iconf = 0
    while not read_configuration('intermediate', unfolded_file, num_atoms, atom_coord):
@@ -179,7 +179,7 @@ def intramolecular_entropy():
 
  remove("UnfoldedDumpFile.txt.gz") # delete the intermediate file with the unfolded coordinates
 
- with open("IntermediateDumpFile.txt.gz", "rb+") as intermediate_file:
+ with Open("IntermediateDumpFile.txt.gz", "rb+") as intermediate_file:
 
   iconf = 0
   while not read_configuration('intermediate', intermediate_file, num_atoms, atom_coord):
@@ -200,7 +200,7 @@ def intramolecular_entropy():
 
  remove("IntermediateDumpFile.txt.gz")
 
- with open(args.OutputEntropyFile, "w") as output_file:
+ with Open(args.OutputEntropyFile, "w") as output_file:
         for imol in range(0, num_molecules):
             eigval = linalg.eigvalsh(disp_matrix[imol][0:3*dispersity[imol]][0:3*dispersity[imol]])
             sort_eigenvalues = eigval.argsort()
