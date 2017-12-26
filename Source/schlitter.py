@@ -1,8 +1,9 @@
 #!/usr/local/bin/python
 
-"""This is the main file to compute
+"""
+This is the main file to compute
 the intramolecular entropy based on
-Schlitter's method
+Schlitter's method.
 """
 
 from os import remove
@@ -15,19 +16,19 @@ from parse_data_file import read_preliminary_data, read_atomic_masses, read_atom
 from parse_dump_file import read_configuration
 
 def intramolecular_entropy():
- """This function is coordinating the calculation of the intramolecular entropy """
+ """This function is coordinating the calculation of the intramolecular entropy."""
 
  parser = ArgumentParser(description='A python script to compute the Intramolecular Entropy based on the Schlitter\'s method. Entropies are computed in Boltzmann\'s constant units, i.e. they are normalized by k_B. The system is assumed to be periodic in all three directions.')
 
- parser.add_argument("Temperature", type=float, help="The temperature of the system in Kelvin")
+ parser.add_argument("Temperature", type=float, help="The temperature of the system in Kelvin.")
  parser.add_argument("OutputEntropyFile", help="The name of the output file where the eigenvalues of the covariance matrix will be stored as well as their contribution to the intramolecular entropy. The name should include the full path to the file. The file is assumed to be new.")
  parser.add_argument("InputDataFile", help="The name of the lammps input data file. The atom_style is assumed to be \"full\" otherwise the information about molecules cannot be retrieved from the data file.")
  parser.add_argument("DumpFileType", help="Define the type of the dump file. It can be either \"xyz\" which means that the file is an xyz one, 'scaled' which means the coordinates are scaled and the dump is the usual lammps file or 'typical' which is a regular LAMMPS dump file with the format \"id x y z\".")
- parser.add_argument("InputDumpFile", nargs='+', help="A list with the name of the lammps input trajectory files. They should include a full path.")
- parser.add_argument("--units", help="define the units to be used in the analysis. The available unit systems are SI, CGS, METAL, LJ, MICRO, NANO, REAL and ELECTRON. It should be written in capital letters. If the specified unit systems is not implemented then the analysis will be stopped immediately and an error message will be printed in the screen. The default unit system is REAL.")
+ parser.add_argument("InputDumpFile", nargs='+', help="A list with the names of the lammps input trajectory files. They should include a full path.")
+ parser.add_argument("--units", help="define the units to be used in the analysis. The available unit systems are SI, CGS, METAL, LJ, MICRO, NANO, REAL and ELECTRON. It should be written in capital letters. If the specified unit systems is not implemented then the analysis will be stopped immediately and an error message will be printed on the screen. The default unit system is REAL.")
  parser.add_argument("--pbc", nargs=3, default=[True, True, True], help="define the periodicity of the simulation box. Three boolean logical values True or False must be provided for the x-, y- and z- axis.")
- parser.add_argument("--restart", help="If specified it means that the analysis will restart after the unfolding.")
- parser.add_argument("--yasp", help="If specified it means that the input files have been created by YASP code")
+ parser.add_argument("--restart", help="If specified this means that the analysis will restart after the unfolding.")
+ parser.add_argument("--yasp", help="If specified this means that the input files have been created by YASP code.")
 
  args = parser.parse_args()
 
