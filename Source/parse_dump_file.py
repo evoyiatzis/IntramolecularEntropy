@@ -1,14 +1,15 @@
 #!/usr/local/bin/python
 
-"""This file contains the functions
-to read from the dump files
+"""
+This file contains the functions
+to read from the dump files.
 """
 from sys import exit
 from itertools import islice
 
 def dump_file(input_file, num_atoms, atom_coord):
     """This function reads configurations from a LAMMPS dump file
-     where coordinates are stored in unscaled format"""
+     where coordinates are stored in unscaled format."""
 
     lines_gen = islice(input_file, num_atoms+9)
 
@@ -44,7 +45,7 @@ def dump_file(input_file, num_atoms, atom_coord):
 
 def scaled_dump_file(input_file, num_atoms, atom_coord):
     """This function reads configurations from a LAMMPS dump file where
-     coordinates are stored in scaled format"""
+     coordinates are stored in scaled format."""
 
     lines_gen = islice(input_file, num_atoms+9)
 
@@ -79,9 +80,7 @@ def scaled_dump_file(input_file, num_atoms, atom_coord):
     return True
 
 def xyz_file(input_file, num_atoms, atom_coord):
-    """
-This function reads input configuration with a xyz file format.
-    """
+    """This function reads input configuration with a xyz file format."""
     lines_gen = islice(input_file, num_atoms+9)
 
     iat, icount = 0, 0
