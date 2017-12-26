@@ -1,7 +1,7 @@
 #!/usr/local/bin/python
 
 """
-This module process the input LAMMPS data file.
+This module processes the input LAMMPS data file.
 It contains the functions:
 -read_preliminary_data
 -read_atomic_masses
@@ -12,7 +12,7 @@ It contains the functions:
 from numpy import zeros, amax, concatenate
 
 def read_preliminary_data(input_file):
-    """ find how many atoms & atom types are contained in the system"""
+    """This function finds how many atoms & atom types are contained in the system."""
 
     for line in input_file:
         temp = line.split()
@@ -37,7 +37,7 @@ def read_preliminary_data(input_file):
     return num_atoms, num_bonds, num_atom_types, xboxlength, yboxlength, zboxlength
 
 def read_atomic_masses(input_file, atom_mass, atom_type, number_atom_types):
-    """ find the masses of all atom types in the system"""
+    """This function finds the masses of all atom types in the system."""
 
     table_mass = zeros(number_atom_types)
 
@@ -65,7 +65,7 @@ def read_atomic_masses(input_file, atom_mass, atom_type, number_atom_types):
                         return
 
 def read_atomic_info(input_file, num_atoms, molecule_id, atom_type):
-    """It extracts the molecule id and atom type of the input structure """
+    """This function extracts the molecule id and atom type of the input structure."""
     while True:
         line = input_file.readline()
         temp = line.split()
@@ -93,7 +93,7 @@ def read_atomic_info(input_file, num_atoms, molecule_id, atom_type):
                         return
 
 def read_bonds(input_file, num_bonds, sorted_bonds):
-    """ store the atom-molecule and atom type info in two lists"""
+    """This function stores the atom-molecule and atom type info in two lists"""
     left_bonds, right_bonds = zeros(num_bonds, dtype=int), zeros(num_bonds, dtype=int)
 
     while True:
