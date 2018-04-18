@@ -14,6 +14,8 @@ from numpy import zeros, amax, concatenate
 def read_preliminary_data(input_file):
     """ find how many atoms & atom types are contained in the system"""
 
+    sim_box = zeros((3, 3))
+
     for line in input_file:
         temp = line.split()
         if len(temp) > 1:
@@ -26,15 +28,15 @@ def read_preliminary_data(input_file):
                     num_atom_types = int(temp[0])
                 elif len(temp) > 3:
                     if temp[2] == "xlo" and temp[3] == "xhi":
-                        xboxlength = float(temp[1]) - float(temp[0])
+                        sim_box[0, 0] = float(temp[1]) - float(temp[0])
                     elif temp[2] == "ylo" and temp[3] == "yhi":
-                        yboxlength = float(temp[1]) - float(temp[0])
+                        sim_box[1, 1] = float(temp[1]) - float(temp[0])
                     elif temp[2] == "zlo" and temp[3] == "zhi":
-                        zboxlength = float(temp[1]) - float(temp[0])
+                        sim_box[2, 2] = float(temp[1]) - float(temp[0])
 
     input_file.seek(0)  # rewind the LAMMPS data file
 
-    return num_atoms, num_bonds, num_atom_types, xboxlength, yboxlength, zboxlength
+    return num_atoms, num_bonds, num_atom_types, sim_box
 
 def read_atomic_masses(input_file, atom_mass, atom_type, number_atom_types):
     """ find the masses of all atom types in the system"""
