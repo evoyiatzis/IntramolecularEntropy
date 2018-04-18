@@ -33,6 +33,11 @@ def read_preliminary_data(input_file):
                         sim_box[1, 1] = float(temp[1]) - float(temp[0])
                     elif temp[2] == "zlo" and temp[3] == "zhi":
                         sim_box[2, 2] = float(temp[1]) - float(temp[0])
+                    elif len(temp) > 5:
+                        if temp[3] == "xy" and temp[4] == "xz" and temp[5] == "yz":
+                            sim_box[0, 1] = float(temp[0])
+                            sim_box[0, 2] = float(temp[1])
+                            sim_box[1, 2] = float(temp[2])
 
     input_file.seek(0)  # rewind the LAMMPS data file
 
