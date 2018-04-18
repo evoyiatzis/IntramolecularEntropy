@@ -45,7 +45,7 @@ def intramolecular_entropy():
  # open the data file to read the molecules
  sorted_bond_sequence = []
  with open(args.InputDataFile, "r") as data_file:
-        num_atoms, num_bonds, num_atom_types, xboxlength, yboxlength, zboxlength = read_preliminary_data(data_file)
+        num_atoms, num_bonds, num_atom_types, sim_box = read_preliminary_data(data_file)
 
         atom_type = np.zeros(num_atoms, dtype=int)
         molecule_id = np.zeros(num_atoms, dtype=int)
@@ -112,9 +112,9 @@ def intramolecular_entropy():
       print("The current timestep is {}".format(num_confs))
 
       for iat, jat in zip(unfold_left, unfold_right):
-       atom_coord[jat, 0] -= xboxlength*round((atom_coord[jat, 0] - atom_coord[iat, 0])/xboxlength)
-       atom_coord[jat, 1] -= yboxlength*round((atom_coord[jat, 1] - atom_coord[iat, 1])/yboxlength)
-       atom_coord[jat, 2] -= zboxlength*round((atom_coord[jat, 2] - atom_coord[iat, 2])/zboxlength)
+       atom_coord[jat, 0] -= sim_box[0, 0]*round((atom_coord[jat, 0] - atom_coord[iat, 0])/sim_box[0, 0])
+       atom_coord[jat, 1] -= sim_box[1, 1]*round((atom_coord[jat, 1] - atom_coord[iat, 1])/sim_box[1, 1])
+       atom_coord[jat, 2] -= sim_box[2, 2]*round((atom_coord[jat, 2] - atom_coord[iat, 2])/sim_box[2, 2])
 
       for imol in range(0, num_molecules):
        com_x = np.sum(np.multiply(atom_mass[atoms_in_mol[imol]], \
