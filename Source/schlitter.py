@@ -25,7 +25,6 @@ def intramolecular_entropy():
  parser.add_argument("DumpFileType", help="Define the type of the dump file. It can be either \"xyz\" which means that the file is an xyz one, 'scaled' which means the coordinates are scaled and the dump is the usual lammps file or 'typical' which is a regular LAMMPS dump file with the format \"id x y z\".")
  parser.add_argument("InputDumpFile", nargs='+', help="A list with the name of the lammps input trajectory files. They should include a full path.")
  parser.add_argument("--units", help="define the units to be used in the analysis. The available unit systems are SI, CGS, METAL, LJ, MICRO, NANO, REAL and ELECTRON. It should be written in capital letters. If the specified unit systems is not implemented then the analysis will be stopped immediately and an error message will be printed in the screen. The default unit system is REAL.")
- parser.add_argument("--pbc", nargs=3, default=[True, True, True], help="define the periodicity of the simulation box. Three boolean logical values True or False must be provided for the x-, y- and z- axis.")
  parser.add_argument("--restart", help="If specified it means that the analysis will restart after the unfolding.")
  parser.add_argument("--yasp", help="If specified it means that the input files have been created by YASP code")
 
