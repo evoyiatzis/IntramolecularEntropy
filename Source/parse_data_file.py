@@ -51,12 +51,12 @@ def read_atomic_masses(input_file, atom_mass, atom_type, number_atom_types):
     while True:
         line = input_file.readline()
         temp = line.split()
-        if len(temp) > 0:
+        if temp:
             if temp[0] == 'Masses':
                 while True:
                     line = input_file.readline()
                     temp = line.split()
-                    if len(temp) > 0:
+                    if temp:
                         table_mass[int(temp[0])-1] = float(temp[1])
                         for _ in range(1, number_atom_types):
                             line = input_file.readline()
@@ -76,12 +76,12 @@ def read_atomic_info(input_file, num_atoms, molecule_id, atom_type):
     while True:
         line = input_file.readline()
         temp = line.split()
-        if len(temp) > 0:
+        if temp:
             if temp[0] == 'Atoms':
                 while True:
                     line = input_file.readline()
                     temp = line.split()
-                    if len(temp) > 0:
+                    if temp:
                         iat = int(temp[0]) - 1
                         imol = int(temp[1]) - 1
                         molecule_id[iat] = imol
@@ -106,12 +106,12 @@ def read_bonds(input_file, num_bonds, sorted_bonds):
     while True:
         line = input_file.readline()
         temp = line.split()
-        if len(temp) > 0:
+        if temp:
             if temp[0] == 'Bonds':
                 while True:
                     line = input_file.readline()
                     temp = line.split()
-                    if len(temp) > 0:
+                    if temp:
                         indx = int(temp[0]) - 1
                         left_bonds[indx] = int(temp[2]) - 1
                         right_bonds[indx] = int(temp[3]) - 1
