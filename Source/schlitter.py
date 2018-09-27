@@ -7,7 +7,7 @@ Schlitter's method
 
 from os import remove
 from sys import exit
-from gzip import open
+import gzip
 from argparse import ArgumentParser
 import numpy as np
 from utilities import set_units, kabsch, form_disp_matrix
@@ -95,13 +95,13 @@ def intramolecular_entropy():
    # move the contents of the new list to the current list
    current = new_list
 
- with open("UnfoldedDumpFile.txt.gz", "ab+") as unfolded_file:
+ with gzip.open("UnfoldedDumpFile.txt.gz", "ab+") as unfolded_file:
   num_confs = 0
   if args.restart is None:
 
    for dump_file in args.InputDumpFile:
 
-    with open(dump_file, "rb") as cur_dump_file:
+    with gzip.open(dump_file, "rb") as cur_dump_file:
 
      while True: # perform the calculations by analyzing all available configurations
 
@@ -163,8 +163,8 @@ def intramolecular_entropy():
             ref_atom[:, 2] = ref_atom[atom_id, 2]
 
 
- with open("IntermediateDumpFile.txt.gz", "wb+") as intermediate_file:
-  with open("UnfoldedDumpFile.txt.gz", "rb+") as unfolded_file:
+ with gzip.open("IntermediateDumpFile.txt.gz", "wb+") as intermediate_file:
+  with gzip.open("UnfoldedDumpFile.txt.gz", "rb+") as unfolded_file:
 
    iconf = 0
    while True:
@@ -187,7 +187,7 @@ def intramolecular_entropy():
 
  remove("UnfoldedDumpFile.txt.gz") # delete the intermediate file with the unfolded coordinates
 
- with open("IntermediateDumpFile.txt.gz", "rb+") as intermediate_file:
+ with gzip.open("IntermediateDumpFile.txt.gz", "rb+") as intermediate_file:
 
   iconf = 0
   while True:
