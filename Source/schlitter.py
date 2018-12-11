@@ -80,6 +80,8 @@ def intramolecular_entropy():
  for imol in range(0, num_molecules):
   exclude, current = [], []
   current.append(atoms_in_mol[imol][0]) # the starting atom is appended to the current list
+  
+  if dispersity[imol] == 1: continue 
 
   while len(exclude) < dispersity[imol]:
    new_list = []
@@ -213,6 +215,7 @@ def intramolecular_entropy():
 
  with open(args.OutputEntropyFile, "w") as output_file:
         for imol in range(0, num_molecules):
+            if dispersity[imol] < 3: continue
             eigval = np.linalg.eigvalsh(disp_matrix[imol][0:3*dispersity[imol]][0:3*dispersity[imol]])
             sort_eigenvalues = eigval.argsort()
             omega = 1 / np.sqrt(eigval[sort_eigenvalues[6: ]]*beta)
