@@ -9,16 +9,16 @@ A short description of the code as well as a complete list of the input, optiona
 	python schlitter.py --help
 
 
-The required input parameters are the temperature of the system, in Kelvin, a LAMMPS data file, which specifies the connectivity of the particles in the system, a string specifying the format of the provided dump files to be analyzed and finally the name of a single or several dump files containing the trajectory. The structure of the LAMMPS data file should follow the one dictated by the ìatom_style fullî command. A support for xyz files as well as for native LAMMPS dump files with scaled or unscaled coordinates is provided. The dump files are expected to be of ASCII type as well as to be compressed with the zlib library. 
-The output of the code is stored in two ASCII text files. The name of the first file is ìReferenceConfiguration.txtî; it is located in the same directory as the code. In this file, the configuration with the smallest radius of gyration for all molecules is stored. In a second file, which has a user specified name, the computed entropy of each molecule is saved followed by two columns containing the non-zero eigenvalues of the covariance matrix together with their contribution to intramolecular entropy. All entropy values are given in k_B units.
-	Two optional arguments can be specified. The first one is the keyword --units followed by a string which specifies the employed unit system in the simulation. If this keyword is not specified, then the code assumes that the unit system is ìREALî. The second optional argument is the keyword --restart followed by a positive integer number. If specified, the code assumes that the calculation is restarted. 
+The required input parameters are the temperature of the system, in Kelvin, a LAMMPS data file, which specifies the connectivity of the particles in the system, a string specifying the format of the provided dump files to be analyzed and finally the name of a single or several dump files containing the trajectory. The structure of the LAMMPS data file should follow the one dictated by the ‚Äúatom_style full‚Äù command. A support for xyz files as well as for native LAMMPS dump files with scaled or unscaled coordinates is provided. The dump files are expected to be of ASCII type as well as to be compressed with the zlib library. 
+The output of the code is stored in two ASCII text files. The name of the first file is ‚ÄúReferenceConfiguration.txt‚Äù; it is located in the same directory as the code. In this file, the configuration with the smallest radius of gyration for all molecules is stored. In a second file, which has a user specified name, the computed entropy of each molecule is saved followed by two columns containing the non-zero eigenvalues of the covariance matrix together with their contribution to intramolecular entropy. All entropy values are given in k_B units.
+	Two optional arguments can be specified. The first one is the keyword --units followed by a string which specifies the employed unit system in the simulation. If this keyword is not specified, then the code assumes that the unit system is ‚ÄúREAL‚Äù. The second optional argument is the keyword --restart followed by a positive integer number. If specified, the code assumes that the calculation is restarted. 
 ---
 
 The code was developed at Technical University of Darmstadt.  It is an open-source code, distributed freely under the terms of the GNU Public License (GPL).
 
 The latest version of the code is available at https://github.com/evoyiatzis/IntramolecularEntropy
 
-The maintainer of the code is Evangelos Voyiatzis, who can be emailed at e.voyiatzis@theo.chemie.tu-darmstadt.de.  
+The maintainer of the code is Evangelos Voyiatzis, who can be emailed at evoyiatzis@gmail.com.  
 
 The distribution includes the following files and directory:
 
